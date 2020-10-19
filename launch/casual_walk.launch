@@ -1,6 +1,8 @@
 <launch>
 
     <arg name="project" default="lio_sam"/>
+    <arg name="imu_topic" default="imu/data"/>
+    <arg name="robot_n" default="robot"/>
     
     <!-- Parameters -->
     <rosparam file="$(find lio_sam)/config/params_casual_walk.yaml" command="load" />
@@ -10,11 +12,13 @@
 
     <!--- Robot State TF -->
     <include file="$(find lio_sam)/launch/include/module_robot_state_publisher.launch" >
-        <arg name="robot_n" value="casual_walk" />
+        <arg name="robot_n" value="$(arg robot_n)" />
     </include>
 
     <!--- Run Navsat -->
-    <include file="$(find lio_sam)/launch/include/module_navsat.launch" />
+    <include file="$(find lio_sam)/launch/include/module_navsat.launch" >
+        <arg name="imu_topic" value="$(arg imu_topic)" />
+    </include>
 
     <!--- Run Rviz-->
     <include file="$(find lio_sam)/launch/include/module_rviz.launch" />
