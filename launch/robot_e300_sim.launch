@@ -4,8 +4,17 @@
     <arg name="robot_n" default="robot_e300"/>
     <arg name="rviz_file" default="$(arg robot_n)"/>
 
+    <arg name="start" default="0"/>
+    <arg name="dur" default="1000000"/>
+    <arg name="rate" default="1"/>
+    <arg name = "imu" default = "/imu"/>
+    <arg name = "odom" default = "/odom"/>
+    <arg name = "scan" default = "/scan"/>
+    <arg name = "points" default = "/velodyne_points"/>
+    <arg name = "tf" default = "/tf_static"/>
+
     <!-- Parameters -->
-    <rosparam file="$(find lio_sam)/config/params_e300.yaml" command="load" />
+    <rosparam file="$(find lio_sam)/config/params_$(arg robot_n).yaml" command="load" />
 
     <!--- LOAM -->
     <include file="$(find lio_sam)/launch/include/module_loam.launch" />
@@ -22,5 +31,9 @@
     <include file="$(find lio_sam)/launch/include/module_rviz.launch" >
         <arg name="rviz_file" value="$(arg rviz_file)" />
     </include>
+
+    <node name="playbag" pkg="rosbag" type="play" launch-prefix="gnome-terminal -x"
+          args="$(arg bag) --clock --pause -r $(arg rate) -s $(arg start) -u $(arg dur)
+                           --topics $(arg odom) $(arg imu) $(arg points) $(arg tf)" />
 
 </launch>

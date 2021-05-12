@@ -27,14 +27,14 @@
 #include <pcl/io/pcd_io.h>
 #include <pcl/filters/filter.h>
 #include <pcl/filters/voxel_grid.h>
-#include <pcl/filters/crop_box.h> 
+#include <pcl/filters/crop_box.h>
 #include <pcl_conversions/pcl_conversions.h>
 
 #include <tf/LinearMath/Quaternion.h>
 #include <tf/transform_listener.h>
 #include <tf/transform_datatypes.h>
 #include <tf/transform_broadcaster.h>
- 
+
 #include <vector>
 #include <cmath>
 #include <algorithm>
@@ -123,7 +123,7 @@ public:
     float mappingCornerLeafSize;
     float mappingSurfLeafSize ;
 
-    float z_tollerance; 
+    float z_tollerance;
     float rotation_tollerance;
 
     // CPU Params
@@ -131,11 +131,11 @@ public:
     double mappingProcessInterval;
 
     // Surrounding map
-    float surroundingkeyframeAddingDistThreshold; 
-    float surroundingkeyframeAddingAngleThreshold; 
+    float surroundingkeyframeAddingDistThreshold;
+    float surroundingkeyframeAddingAngleThreshold;
     float surroundingKeyframeDensity;
     float surroundingKeyframeSearchRadius;
-    
+
     // Loop closure
     bool  loopClosureEnableFlag;
     float loopClosureFrequency;
@@ -173,7 +173,7 @@ public:
         nh.param<std::string>("lio_sam/savePCDDirectory", savePCDDirectory, "/Downloads/LOAM/");
 
         std::string sensorStr;
-        nh.param<std::string>("lio_sam/sensor", sensorStr, "");
+        nh.param<std::string>("lio_sam/sensor", sensorStr, " ");
         if (sensorStr == "velodyne")
         {
             sensor = SensorType::VELODYNE;
@@ -185,7 +185,7 @@ public:
         else
         {
             ROS_ERROR_STREAM(
-                "Invalid sensor type (must be either 'velodyne' or 'ouster'): " << sensorStr);
+                "Invalid sensor type (you should add 'sensor: velodyne' or 'sensor: ouster' in your yaml): " << sensorStr);
             ros::shutdown();
         }
 

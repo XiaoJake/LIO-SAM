@@ -11,12 +11,12 @@
   </joint>
 
   <link name="chassis_link"></link>
-  
+
   <link name="imu_link"> </link>
   <joint name="imu_joint" type="fixed">
     <parent link="chassis_link" />
     <child link="imu_link" />
-    <origin xyz="0.23 0 0.522056" rpy="-0.001398042 -0.012606848 0.02765112"/>
+    <origin xyz="0.109 0 0.0" rpy="0 0 0"/>
   </joint>
 
   <link name="imu_enu_link"> </link>
@@ -30,7 +30,7 @@
   <joint name="velodyne_joint" type="fixed">
     <parent link="chassis_link" />
     <child link="laser_link" />
-    <origin xyz="0.23 0.0 0.452" rpy="-0.010453292 0.012453292 0.010453292"/>
+    <origin xyz="0.13686 0.0 0.58110" rpy="0 0 0"/>
   </joint>
 
   <link name="realsense_link"> </link>
