@@ -4,6 +4,9 @@
     <arg name="imu_topic" default="imu/data"/>
     <arg name="robot_n" default="robot"/>
     
+    <arg name="start" default="0"/>
+    <arg name="dur" default="1000000"/>
+    <arg name="rate" default="1"/>
     <!-- Parameters -->
     <rosparam file="$(find lio_sam)/config/params_casual_walk.yaml" command="load" />
 
@@ -23,4 +26,6 @@
     <!--- Run Rviz-->
     <include file="$(find lio_sam)/launch/include/module_rviz.launch" />
 
+    <node name="playbag" pkg="rosbag" type="play" launch-prefix="gnome-terminal -x"
+          args="$(arg bag) --clock --pause -r $(arg rate) -s $(arg start) -u $(arg dur)" />
 </launch>

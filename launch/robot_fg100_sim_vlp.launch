@@ -1,0 +1,39 @@
+<launch>
+
+    <arg name="project" default="lio_sam"/>
+    <arg name="robot_n" default="robot_fg100"/>
+    <arg name="rviz_file" default="$(arg robot_n)"/>
+
+    <arg name="start" default="0"/>
+    <arg name="dur" default="1000000"/>
+    <arg name="rate" default="1"/>
+    <arg name = "imu" default = "/imu"/>
+    <arg name = "odom" default = "/odom"/>
+    <arg name = "scan" default = "/scan"/>
+    <arg name = "points" default = "/velodyne_points"/>
+    <arg name = "tf" default = "/tf_static"/>
+
+    <!-- Parameters -->
+    <rosparam file="$(find lio_sam)/config/params_$(arg robot_n).yaml" command="load" />
+
+    <!--- LOAM -->
+    <include file="$(find lio_sam)/launch/include/module_loam.launch" />
+
+    <!--- Robot State TF -->
+    <include file="$(find lio_sam)/launch/include/module_robot_state_publisher.launch" >
+        <arg name="robot_n" value="$(arg robot_n)" />
+    </include>
+
+    <!--- Run Navsat -->
+    <include file="$(find lio_sam)/launch/include/module_navsat.launch" />
+
+    <!--- Run Rviz-->
+    <include file="$(find lio_sam)/launch/include/module_rviz.launch" >
+        <arg name="rviz_file" value="$(arg rviz_file)" />
+    </include>
+
+    <node name="playbag" pkg="rosbag" type="play" launch-prefix="gnome-terminal -x"
+          args="$(arg bag) --clock --pause -r $(arg rate) -s $(arg start) -u $(arg dur)
+                           --topics $(arg odom) $(arg imu) $(arg points) $(arg tf)" />
+
+</launch>

@@ -44,7 +44,7 @@ private:
 
     ros::Subscriber subLaserCloud;
     ros::Publisher  pubLaserCloud;
-    
+
     ros::Publisher pubExtractedCloud;
     ros::Publisher pubLaserCloudInfo;
 
@@ -152,12 +152,12 @@ public:
         // debug IMU data
         // cout << std::setprecision(6);
         // cout << "IMU acc: " << endl;
-        // cout << "x: " << thisImu.linear_acceleration.x << 
-        //       ", y: " << thisImu.linear_acceleration.y << 
+        // cout << "x: " << thisImu.linear_acceleration.x <<
+        //       ", y: " << thisImu.linear_acceleration.y <<
         //       ", z: " << thisImu.linear_acceleration.z << endl;
         // cout << "IMU gyro: " << endl;
-        // cout << "x: " << thisImu.angular_velocity.x << 
-        //       ", y: " << thisImu.angular_velocity.y << 
+        // cout << "x: " << thisImu.angular_velocity.x <<
+        //       ", y: " << thisImu.angular_velocity.y <<
         //       ", z: " << thisImu.angular_velocity.z << endl;
         // double imuRoll, imuPitch, imuYaw;
         // tf::Quaternion orientation;
@@ -203,6 +203,20 @@ public:
         if (sensor == SensorType::VELODYNE)
         {
             pcl::moveFromROSMsg(currentCloudMsg, *laserCloudIn);
+            // TODO:: remove nan
+            // std::vector<int> indices;
+            // pcl::removeNaNFromPointCloud(*laserCloudIn, *laserCloudIn, indices);
+            if(!laserCloudIn->is_dense)
+            {
+                static bool first = true;
+                if(first){
+                    ROS_ERROR("Point cloud is not in dense format, please remove NaN points best!");
+                    ROS_ERROR("System ignore it this time.");
+                    first = false;
+                }
+
+                laserCloudIn->is_dense = true;
+            }
         }
         else if (sensor == SensorType::OUSTER)
         {
@@ -266,7 +280,7 @@ public:
             deskewFlag = -1;
             for (auto &field : currentCloudMsg.fields)
             {
-                if (field.name == "time" || field.name == "t")
+                if (field.name == "time" || field.name == "timestamp" || field.name == "t")
                 {
                     deskewFlag = 1;
                     break;
@@ -584,7 +598,7 @@ public:
             cloudInfo.endRingIndex[i] = count -1 - 5;
         }
     }
-    
+
     void publishClouds()
     {
         cloudInfo.header = cloudHeader;
@@ -598,11 +612,11 @@ int main(int argc, char** argv)
     ros::init(argc, argv, "lio_sam");
 
     ImageProjection IP;
-    
+
     ROS_INFO("\033[1;32m----> Image Projection Started.\033[0m");
 
     ros::MultiThreadedSpinner spinner(3);
     spinner.spin();
-    
+
     return 0;
 }

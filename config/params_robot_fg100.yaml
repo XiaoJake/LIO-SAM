@@ -2,13 +2,13 @@ lio_sam:
 
   # Topics
   pointCloudTopic: "/velodyne_points"               # Point cloud data
-  imuTopic: "/imu/data"                         # IMU data
-  odomTopic: "odometry/imu"                   # IMU pre-preintegration odometry, same frequency as IMU
+  imuTopic: "/imu"                         # IMU data
+  odomTopic: "/odom"                   # IMU pre-preintegration odometry, same frequency as IMU
   gpsTopic: "odometry/gpsz"                   # GPS odometry topic from navsat, see module_navsat.launch file
 
   # Frames
-  lidarFrame: "base_link"
-  baselinkFrame: "base_link"
+  lidarFrame: "fg100_vlp_link"
+  baselinkFrame: "fg100_link"
   odometryFrame: "odom"
   mapFrame: "map"
 
@@ -29,18 +29,25 @@ lio_sam:
   timeField: "time"                           # point timestamp field, Velodyne - "time", Ouster - "t"
   downsampleRate: 1                           # default: 1. Downsample your data if too many points. i.e., 16 = 64 / 4, 16 = 16 / 1
   lidarMinRange: 0.25                          # default: 1.0, minimum lidar range to be used
-  lidarMaxRange: 120.0                         # default: 1. Downsample your data if too many points. i.e., 16 = 64 / 4, 16 = 16 / 1
-
+  lidarMaxRange: 120.0
 
   # IMU Settings
   imuAccNoise: 0.8939570888238808e-01
   imuGyrNoise: 0.3636343949698187e-01
   imuAccBiasN: 3.2356659353532566e-03
   imuGyrBiasN: 1.75640318696367613e-03
-  imuGravity: 10.1611030805
+  imuGravity: 9.80511
+  imuRPYWeight: 0.01
+
+  # imuAccNoise: 0.8939570888238808e-02
+  # imuGyrNoise: 0.3636343949698187e-02
+  # imuAccBiasN: 3.2356659353532566e-03
+  # imuGyrBiasN: 1.75640318696367613e-03
+  # imuGravity: 9.80511
+  # imuRPYWeight: 0.01
 
   # Extrinsics (lidar -> IMU)
-  extrinsicTrans: [0.0, 0.0, 0.0]
+  extrinsicTrans: [-2.345, 0.0, 0]
   extrinsicRot: [1, 0, 0,
                   0, 1, 0,
                   0, 0, 1]
@@ -49,19 +56,19 @@ lio_sam:
                   0, 0, 1]
 
   # LOAM feature threshold
-  edgeThreshold: 0.75
-  surfThreshold: 0.1
+  edgeThreshold: 0.8
+  surfThreshold: 0.85
   edgeFeatureMinValidNum: 10
-  surfFeatureMinValidNum: 100
+  surfFeatureMinValidNum: 80
 
   # voxel filter paprams
-  odometrySurfLeafSize: 0.4                     # default: 0.4
-  mappingCornerLeafSize: 0.2                    # default: 0.2
-  mappingSurfLeafSize: 0.4                      # default: 0.4
+  odometrySurfLeafSize: 0.2                     # default: 0.4
+  mappingCornerLeafSize: 0.1                    # default: 0.2
+  mappingSurfLeafSize: 0.2                      # default: 0.4
 
   # robot motion constraint (in case you are using a 2D robot)
-  z_tollerance: 1000                            # meters   # default:1000
-  rotation_tollerance: 1000                     # radians  # default:1000
+  z_tollerance: 0                            # meters   # default:1000
+  rotation_tollerance: 0                     # radians  # default:1000
 
   # CPU Params
   numberOfCores: 4                              # number of cores for mapping optimization
@@ -88,6 +95,8 @@ lio_sam:
   globalMapVisualizationLeafSize: 0.2          # meters, global map visualization cloud density
 
 
+
+
 # Navsat (convert GPS coordinates to Cartesian)
 navsat:
   frequency: 50
@@ -105,11 +114,11 @@ ekf_gps:
   publish_tf: false
   map_frame: map
   odom_frame: odom
-  base_link_frame: base_link
+  base_link_frame: fg100_link
   world_frame: odom
 
   frequency: 50
-  two_d_mode: false
+  two_d_mode: true
   sensor_timeout: 0.01
   # -------------------------------------
   # External IMU:
