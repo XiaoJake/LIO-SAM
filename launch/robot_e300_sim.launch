@@ -7,11 +7,11 @@
     <arg name="start" default="0"/>
     <arg name="dur" default="1000000"/>
     <arg name="rate" default="1"/>
-    <arg name = "imu" default = "/imu"/>
-    <arg name = "odom" default = "/odom"/>
-    <arg name = "scan" default = "/scan"/>
-    <arg name = "points" default = "/velodyne_points"/>
-    <arg name = "tf" default = "/tf_static"/>
+    <arg name = "imu" default = "imu"/>
+    <arg name = "odom" default = "odom"/>
+    <arg name = "scan" default = "scan"/>
+    <arg name = "points" default = "velodyne_points"/>
+    <arg name = "tf" default = "tf_static"/>
 
     <!-- Parameters -->
     <rosparam file="$(find lio_sam)/config/params_$(arg robot_n).yaml" command="load" />
